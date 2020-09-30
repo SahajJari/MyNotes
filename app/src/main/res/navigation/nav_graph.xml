@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/noteListFragment">
+    <fragment
+        android:id="@+id/noteListFragment"
+        android:name="com.sahaj.mynotes.ui.NoteListFragment"
+        android:label="My Notes">
+        <action
+            android:id="@+id/actionAddNote"
+            app:destination="@id/addNoteFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/addNoteFragment"
+        android:name="com.sahaj.mynotes.ui.AddNoteFragment"
+        android:label="Add Note">
+        <action
+            android:id="@+id/actionSaveNote"
+            app:destination="@id/noteListFragment" />
+        <argument
+            android:name="Note"
+            android:defaultValue="@null"
+            app:argType="com.sahaj.mynotes.db.Note"
+            app:nullable="true" />
+    </fragment>
+</navigation>
