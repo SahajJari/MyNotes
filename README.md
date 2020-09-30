@@ -18,4 +18,4 @@ Simple My Notes Application for android
 
 **Android Architecture**
 
-- [MVVM Architecture]
+- MVVM Architecture
