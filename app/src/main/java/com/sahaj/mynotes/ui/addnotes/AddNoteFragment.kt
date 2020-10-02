@@ -138,7 +138,7 @@ class AddNoteFragment : BaseFragment(), KodeinAware {
 
             setPositiveButton("Yes") { _, _ ->
 
-                viewModel.deleteNote(note)
+                viewModel.deleteNote(requireView(), note)
 
             }
 

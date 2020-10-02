@@ -23,6 +23,7 @@ class AddNoteViewModel(
             if (note == null)
 
                 repository.addNote(mNote)
+
             else {
 
                 mNote.id = note.id
@@ -38,10 +39,15 @@ class AddNoteViewModel(
 
     }
 
-    fun deleteNote(note: Note) {
+    fun deleteNote(view: View, note: Note) {
 
         Coroutines.main {
+
             repository.deleteNote(note)
+
+            val navigation = AddNoteFragmentDirections.actionSaveNote()
+            Navigation.findNavController(view).navigate(navigation)
+
         }
 
     }
