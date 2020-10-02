@@ -1,6 +1,5 @@
-package com.sahaj.mynotes.ui
+package com.sahaj.mynotes.ui.home
 
-import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
@@ -8,8 +7,6 @@ import androidx.navigation.ui.NavigationUI
 import com.sahaj.mynotes.R
 
 class Home : AppCompatActivity() {
-
-    private val context: Context = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

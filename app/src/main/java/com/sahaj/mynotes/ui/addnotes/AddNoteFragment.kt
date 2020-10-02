@@ -1,17 +1,42 @@
-package com.sahaj.mynotes.ui
+package com.sahaj.mynotes.ui.addnotes
 
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AlertDialog
-import androidx.navigation.Navigation
+import androidx.lifecycle.ViewModelProvider
 import com.sahaj.mynotes.R
 import com.sahaj.mynotes.data.db.Note
-import com.sahaj.mynotes.data.db.NoteDB
+import com.sahaj.mynotes.databinding.FragAddNoteBinding
+import com.sahaj.mynotes.ui.BaseFragment
 import com.sahaj.mynotes.utils.showToast
 import kotlinx.android.synthetic.main.frag_add_note.*
-import kotlinx.coroutines.launch
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.kodein
+import org.kodein.di.generic.instance
 
-class AddNoteFragment : BaseFragment() {
+class AddNoteFragment : BaseFragment(), KodeinAware {
+
+    override val kodein by kodein()
+
+    private val factory: AddNoteViewModelFactory by instance()
+
+    private lateinit var viewModel: AddNoteViewModel
+
+    /*
+
+        1) jvm 1.8 is required in gradle.build :
+
+            android {
+                // Other code here...
+                kotlinOptions {
+                    jvmTarget = "1.8"
+                }
+            }
+
+        2)  We can use this way now also
+
+     */
+//    private val viewModel: AddNoteViewModel by viewModels { factory }
 
     private var note: Note? = null
 
@@ -21,7 +46,14 @@ class AddNoteFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return inflater.inflate(R.layout.frag_add_note, container, false)
+        val binding = FragAddNoteBinding.inflate(inflater, container, false)
+
+        viewModel = ViewModelProvider(this, factory).get(AddNoteViewModel::class.java)
+
+        binding.viewmodel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        return binding.root
 
     }
 
@@ -38,10 +70,12 @@ class AddNoteFragment : BaseFragment() {
 
             note = AddNoteFragmentArgs.fromBundle(it).note
 
-            etTitle.setText(note?.title)
-            etText.setText(note?.text)
+            note?.let {
+                setHasOptionsMenu(true)
+            }
 
-            setHasOptionsMenu(true)
+            viewModel.noteTitle = note?.title
+            viewModel.noteText = note?.text
 
         }
 
@@ -53,8 +87,8 @@ class AddNoteFragment : BaseFragment() {
 
         btnSave.setOnClickListener { view ->
 
-            val title = etTitle.text.toString().trim()
-            val text = etText.text.toString().trim()
+            val title = viewModel.noteTitle!!.trim()
+            val text = viewModel.noteText!!.trim()
 
             if (title.isEmpty()) {
 
@@ -73,26 +107,7 @@ class AddNoteFragment : BaseFragment() {
 
             }
 
-            launch {
-
-                val mNote = Note(title, text)
-
-                context?.let {
-
-                    if (note == null)
-                        NoteDB(it).getNoteDao().addNote(mNote)
-                    else {
-                        mNote.id = note!!.id
-                        NoteDB(it).getNoteDao().updateNote(mNote)
-                    }
-
-
-                    val navigation = AddNoteFragmentDirections.actionSaveNote()
-                    Navigation.findNavController(view).navigate(navigation)
-
-                }
-
-            }
+            viewModel.saveNote(view, note)
 
         }
 
@@ -123,14 +138,7 @@ class AddNoteFragment : BaseFragment() {
 
             setPositiveButton("Yes") { _, _ ->
 
-                launch {
-
-                    NoteDB(context).getNoteDao().deleteNote(note)
-
-                    val action = AddNoteFragmentDirections.actionSaveNote()
-                    Navigation.findNavController(requireView()).navigate(action)
-
-                }
+                viewModel.deleteNote(note)
 
             }
 

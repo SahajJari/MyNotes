@@ -1,4 +1,4 @@
-package com.sahaj.mynotes.ui
+package com.sahaj.mynotes.ui.notes
 
 import android.view.LayoutInflater
 import android.view.View
@@ -29,8 +29,7 @@ class NoteAdapter(private val notes: List<Note>) :
 
         holder.itemView.setOnClickListener {
 
-            val action = NoteListFragmentDirections.actionAddNote()
-            action.note = notes[position]
+            val action = NoteListFragmentDirections.actionAddNote(notes[position])
             Navigation.findNavController(it).navigate(action)
 
         }

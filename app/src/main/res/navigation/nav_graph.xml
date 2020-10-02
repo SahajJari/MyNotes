@@ -5,7 +5,7 @@
     app:startDestination="@id/noteListFragment">
     <fragment
         android:id="@+id/noteListFragment"
-        android:name="com.sahaj.mynotes.ui.NoteListFragment"
+        android:name="com.sahaj.mynotes.ui.notes.NoteListFragment"
         android:label="My Notes">
         <action
             android:id="@+id/actionAddNote"
@@ -14,15 +14,14 @@
     </fragment>
     <fragment
         android:id="@+id/addNoteFragment"
-        android:name="com.sahaj.mynotes.ui.AddNoteFragment"
+        android:name="com.sahaj.mynotes.ui.addnotes.AddNoteFragment"
         android:label="Add Note">
         <action
             android:id="@+id/actionSaveNote"
             app:destination="@id/noteListFragment" />
         <argument
             android:name="Note"
-            android:defaultValue="@null"
-            app:argType="com.sahaj.mynotes.db.Note"
+            app:argType="com.sahaj.mynotes.data.db.Note"
             app:nullable="true" />
     </fragment>
 </navigation>
